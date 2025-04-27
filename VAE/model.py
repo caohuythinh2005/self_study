@@ -13,13 +13,13 @@ import torch.utils.data
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 train_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('/data', train=True, download=True,
+    datasets.MNIST('./VAE/data', train=True, download=True,
                    transform=transforms.ToTensor()),
     batch_size=1024, shuffle=True
 )
 
 test_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('/data', train=False, download=True,
+    datasets.MNIST('./VAE/data', train=False, download=True,
                    transform=transforms.ToTensor()),
     batch_size=1024
 )
@@ -74,7 +74,7 @@ def train(epoch):
         # if batch_idx % 110 == 0:
         #     print('Epoch: {}\tBatch_idx: {}\tLoss: {:.4f}'.format(epoch, batch_idx, (loss.item()/len(data))))
 
-    torch.save(model.state_dict(), 'VAE\\save\\vae.pt')
+    torch.save(model.state_dict(), './VAE/save/vae.pt')
 
     print('Epoch: {}, \t Average loss: {:.4f}'.format(epoch, train_loss / len(train_loader.dataset)))
 
@@ -92,14 +92,14 @@ def test(epoch):
                 comparison = torch.cat([data[:n],
                                         recon_batch.view(1024, 1, 28, 28)[:n]])
                 save_image(comparison.cpu(),
-                           'VAE\\results/reconstruction_' + str(epoch) + '.png')
+                           './VAE/results/reconstruction_' + str(epoch) + '.png')
             
     test_loss /= len(test_loader.dataset)
     print('Test set loss: {:4f}'.format(test_loss))
 
 
 if __name__=='__main__':
-    model.load_state_dict(torch.load('VAE\\save\\vae.pt'))
+    model.load_state_dict(torch.load('./VAE/save/vae.pt'))
     # train_epochs = 100
     # for epoch in range(train_epochs):  
     #     train(epoch + 1)
